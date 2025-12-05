@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
-import { transferenciaSchema, transferenciaErrorSchema } from "../schemas/transferencia";
-import { validateSchema } from "../support/utils/validateSchema";
-import { validarErro } from "../support/utils/validateError";
-import { validar } from "../support/utils/validate";
+import { transferenciaSchema, transferenciaErrorSchema } from "../../schemas/transferenciaPost";
+import { validateSchema } from "../../support/utils/validateSchema";
+import { validarErro } from "../../support/utils/validateError";
+import { validar } from "../../support/utils/validate";
 
-describe("Transferencia - API Test", () => {
+describe("TransferenciaPost - API Test", () => {
     it("Deve aparecer 201 com a tranferencia efetuada com dados corretos", () => {
         cy.transferencia().then((response) => {
             validar(response, 201, transferenciaSchema, "Transferência realizada com sucesso.");
