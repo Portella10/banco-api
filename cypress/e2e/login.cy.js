@@ -2,6 +2,7 @@
 import { loginSchema, loginErrorSchema } from "../schemas/loginSchema";
 import { validateSchema } from "../support/utils/validateSchema";
 import { validarErro } from "../support/utils/validateError";
+import { validar } from "../support/utils/validate";
 
 describe("login - API Tests", () => {
     it("Deve dar status 200 com credenciais válidas", () => {
