@@ -6,7 +6,7 @@ import { validar } from "../../support/utils/validate";
 
 describe("TransferenciaPost - API Test", () => {
     it("Deve aparecer 201 com a tranferencia efetuada com dados corretos", () => {
-        cy.transferencia().then((response) => {
+        cy.transferencia("POST", "", 1, 2, 10).then((response) => {
             validar(response, 201, transferenciaSchema, "Transferência realizada com sucesso.");
             cy.log("✅ Transferencia concluida com sucesso, seguindo as regras de negocios");
         });

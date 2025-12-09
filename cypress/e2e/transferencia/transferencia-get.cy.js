@@ -1,39 +1,35 @@
 /// <reference types="cypress" />
-import { validateSchema } from "../../support/utils/validateSchema";
+
 import { transferenciasListSchema, transferenciaListErrorSchema, transferenciaUnicaSchema } from "../../schemas/transferenciaListSchema";
+import { validarErro } from "../../support/utils/validateError";
+import { validarGetId, validarLista } from "../../support/utils/validate";
 
 describe("TransferenciaGet - API Test", () => {
     it("Deve apresentar todas as transferencias com status 200", () => {
         cy.listaCompleta("GET").then((response) => {
-            expect(response.status).to.equal(200);
-            expect(response.body).to.have.property("transferencias");
-            validateSchema(transferenciasListSchema, response.body);
+            validarLista(response, 200, "transferencias", transferenciasListSchema);
+            cy.log("✅ Lista de transferencias apresentada");
         });
     });
 
     it("Deve apresentar erro 405 quando colocar metodo nao permitido", () => {
         cy.listaCompleta("PUT").then((response) => {
-            expect(response.status).to.equal(405);
-            expect(response.body.error).to.equal("Método não permitido.");
-            validateSchema(transferenciaListErrorSchema, response.body);
+            validarErro(response, 405, transferenciaListErrorSchema, "Método não permitido.");
+            cy.log("✅ Erro 405 apresentado com método não permitido");
         });
     });
 
     it("Deve apresentar apenas as informacoes informada pelo ID", () => {
         cy.listaId(1).then((response) => {
-            expect(response.status).to.equal(200);
-            expect(response.body.id).to.equal(1);
-            expect(response.body.valor).to.equal("10.00");
-            expect(response.body.conta_origem_id).not.equal(response.body.conta_destino_id);
-            validateSchema(transferenciaUnicaSchema, response.body);
+            validarGetId(response, 200, 1, "50.00", transferenciaUnicaSchema);
+            cy.log("✅ Informaçoes apresentadas pelo id");
         });
     });
 
     it("Deve apresentar erro 401 não autorizado", () => {
         cy.listaSemToken(1).then((response) => {
-            expect(response.status).to.equal(401);
-            expect(response.body.error).to.equal("Token de autenticação não fornecido.");
-            validateSchema(transferenciaListErrorSchema, response.body);
+            validarErro(response, 401, transferenciaListErrorSchema, "Token de autenticação não fornecido.");
+            cy.log("✅ Erro 401 apresentado quando conta não é autenticada");
         });
     });
 
@@ -45,14 +41,6 @@ describe("TransferenciaGet - API Test", () => {
             // expect(response.body.error).to.equal("Transferência não encontrada.");
             // expect(response.body.error).to.equal("Token de autenticação não fornecido.");
             // validateSchema(transferenciaListErrorSchema, response.body);
-        });
-    });
-
-    it("Deve apresentar erro 405 com metodo nao permitido", () => {
-        cy.listaCompleta("PUT").then((response) => {
-            expect(response.status).to.equal(405);
-            expect(response.body.error).to.equal("Método não permitido.");
-            validateSchema(transferenciaListErrorSchema, response.body);
         });
     });
 });

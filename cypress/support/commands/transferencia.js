@@ -1,19 +1,19 @@
-Cypress.Commands.add("transferencia", () => {
+Cypress.Commands.add("transferencia", (method, id, contaOrigem, contaDestino, valor) => {
     return cy.login().then((response) => {
         const token = response.body.token;
 
         return cy.request({
-            method: "POST",
-            url: `${Cypress.env("baseUrl")}/transferencias`,
+            method: method,
+            url: `${Cypress.env("baseUrl")}/transferencias/${id}`,
             failOnStatusCode: false,
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
             body: {
-                contaOrigem: 1,
-                contaDestino: 2,
-                valor: 10,
+                contaOrigem: contaOrigem,
+                contaDestino: contaDestino,
+                valor: valor,
             },
         });
     });
@@ -38,21 +38,21 @@ Cypress.Commands.add("transferenciaInvalida", (method, contaOrigem, contaDestino
         });
     });
 });
-Cypress.Commands.add("transferenciaSemToken", () => {
+Cypress.Commands.add("transferenciaSemToken", (method, id, contaOrigem, contaDestino, valor) => {
     return cy.login().then((response) => {
         const token = response.body.token;
 
         return cy.request({
-            method: "POST",
-            url: `${Cypress.env("baseUrl")}/transferencias`,
+            method: method,
+            url: `${Cypress.env("baseUrl")}/transferencias/${id}`,
             failOnStatusCode: false,
             headers: {
                 "Content-Type": "application/json",
             },
             body: {
-                contaOrigem: 1,
-                contaDestino: 2,
-                valor: 10,
+                contaOrigem: contaOrigem,
+                contaDestino: contaDestino,
+                valor: valor,
             },
         });
     });
