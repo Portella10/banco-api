@@ -25,5 +25,6 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import "./commands/login";
+import "./commands/loginErro";
 import "./commands/transferencia";
-import "./commands/transferenciaGet";
+import "./commands/transferenciaErro";

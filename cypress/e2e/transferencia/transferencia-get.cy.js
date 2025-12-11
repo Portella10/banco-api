@@ -19,9 +19,9 @@ describe("TransferenciaGet - API Test", () => {
         });
     });
 
-    it("Deve apresentar apenas as informacoes informada pelo ID", () => {
-        cy.listaId(1).then((response) => {
-            validarGetId(response, 200, 1, "50.00", transferenciaUnicaSchema);
+    it("Deve apresentar apenas as informacoes informada pelo ID", function () {
+        cy.listaId(11).then((response) => {
+            validarGetId(response, 200, 11, "10.00", transferenciaUnicaSchema);
             cy.log("✅ Informaçoes apresentadas pelo id");
         });
     });
