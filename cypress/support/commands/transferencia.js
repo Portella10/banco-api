@@ -1,29 +1,44 @@
-Cypress.Commands.add("transferencia", () => {
+// GET por ID
+Cypress.Commands.add("listaId", (id) => {
     return cy.login().then((response) => {
         const token = response.body.token;
 
         return cy.request({
-            method: "POST",
+            method: "GET",
+            url: `${Cypress.env("baseUrl")}/transferencias/${id}`,
+            failOnStatusCode: false,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    });
+});
+
+// GET lista completa
+Cypress.Commands.add("listaCompleta", (method) => {
+    return cy.login().then((response) => {
+        const token = response.body.token;
+
+        return cy.request({
+            method: method,
             url: `${Cypress.env("baseUrl")}/transferencias`,
             failOnStatusCode: false,
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: {
-                contaOrigem: 1,
-                contaDestino: 2,
-                valor: 10,
-            },
         });
     });
 });
-Cypress.Commands.add("transferenciaInvalida", (method, contaOrigem, contaDestino, valor) => {
+
+// POST
+Cypress.Commands.add("fazerTransferencia", (contaOrigem, contaDestino, valor) => {
     return cy.login().then((response) => {
         const token = response.body.token;
 
         return cy.request({
-            method: method,
+            method: "POST",
             url: `${Cypress.env("baseUrl")}/transferencias`,
             failOnStatusCode: false,
             headers: {
@@ -38,21 +53,40 @@ Cypress.Commands.add("transferenciaInvalida", (method, contaOrigem, contaDestino
         });
     });
 });
-Cypress.Commands.add("transferenciaSemToken", () => {
+
+// PUT (atualizar)
+Cypress.Commands.add("atualizarTransferencia", (id, contaOrigem, contaDestino, valor) => {
     return cy.login().then((response) => {
         const token = response.body.token;
 
         return cy.request({
-            method: "POST",
-            url: `${Cypress.env("baseUrl")}/transferencias`,
+            method: "PUT",
+            url: `${Cypress.env("baseUrl")}/transferencias/${id}`,
             failOnStatusCode: false,
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
             },
             body: {
-                contaOrigem: 1,
-                contaDestino: 2,
-                valor: 10,
+                contaOrigem: contaOrigem,
+                contaDestino: contaDestino,
+                valor: valor,
+            },
+        });
+    });
+});
+
+// DELETE
+Cypress.Commands.add("DeletarTrasnferencia", (id) => {
+    return cy.login().then((response) => {
+        const token = response.body.token;
+        cy.request({
+            method: "DELETE",
+            url: `${Cypress.env("baseUrl")}/transferencias/${id}`,
+            failOnStatusCode: false,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
             },
         });
     });
