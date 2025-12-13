@@ -1,28 +1,32 @@
 /// <reference types="cypress" />
 
-describe("TransferenciaDelete - API Test", () => {
-    it("Deve retornar status 204 quando deletar uma transferência", () => {
-        cy.log(" Validando que a transferência existe antes do delete...");
+import { validarErroSemSchema } from "../../support/utils/validateError";
+
+describe("Transferência - API Test | DELETE", () => {
+    it("Deve retornar status 204 ao deletar uma transferência existente", () => {
+        cy.log("Validando a existência da transferência antes da exclusão");
+
         cy.listaId(7).then((res) => {
-            cy.log(`Registro encontrado: ${JSON.stringify(res.body)}`);
+            cy.log(`Transferência localizada: ${JSON.stringify(res.body)}`);
             expect(res.status).to.equal(200);
             expect(res.body.id).to.equal(res.body.id);
         });
+
         cy.DeletarTrasnferencia(8).then((delRes) => {
-            cy.log(`Resposta do DELETE: ${delRes.status}`);
+            cy.log(`Status retornado no DELETE: ${delRes.status}`);
             expect(delRes.status).to.equal(204);
         });
     });
-    it("Deve apresntar erro quando o nao for autorizado", () => {
+
+    it("Deve retornar erro 401 ao tentar deletar transferência sem token de autenticação", () => {
         cy.DeletarTrasnferenciaSemToken(10).then((response) => {
-            expect(response.status).to.equal(401);
-            expect(response.body.error).to.equal("Token de autenticação não fornecido.");
+            validarErroSemSchema(response, 401, "Token de autenticação não fornecido.");
         });
     });
-    it("Deve apresntar erro quando nao encontrar transferencia", () => {
+
+    it("Deve retornar erro 404 ao tentar deletar transferência inexistente", () => {
         cy.DeletarTrasnferenciaComIdinexistende(10000000000000).then((response) => {
-            expect(response.status).to.equal(404);
-            expect(response.body.error).to.equal("Transferência não encontrada.");
+            validarErroSemSchema(response, 404, "Transferência não encontrada.");
         });
     });
 });

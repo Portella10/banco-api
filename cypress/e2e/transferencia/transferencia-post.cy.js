@@ -4,32 +4,36 @@ import { validateSchema } from "../../support/utils/validateSchema";
 import { validarErro } from "../../support/utils/validateError";
 import { validar } from "../../support/utils/validate";
 
-describe("TransferenciaPost - API Test", () => {
-    it("Deve aparecer 201 com a tranferencia efetuada com dados corretos", () => {
+describe("Transferência - API Test | POST", () => {
+    it("Deve retornar status 201 ao realizar transferência com dados válidos", () => {
         cy.fazerTransferencia(1, 2, 10).then((response) => {
             validar(response, 201, transferenciaSchema, "Transferência realizada com sucesso.");
-            cy.log("✅ Transferencia concluida com sucesso, seguindo as regras de negocios");
+            cy.log("Transferência concluída com sucesso, respeitando as regras de negócio");
         });
     });
-    it("Deve retornar 404 com parâmetro contaOrigem vazio", () => {
+
+    it("Deve retornar erro 404 ao informar conta de origem vazia", () => {
         cy.fazerTransferencia("", 2, 10).then((response) => {
             validarErro(response, 404, transferenciaErrorSchema, "Conta de origem ou destino não encontrada.");
-            cy.log("✅ Validacao do erro 404 com sucesso");
+            cy.log("Validação do erro 404 realizada com sucesso");
         });
     });
-    it("Deve dar erro 401 com a falta de autenticacao", () => {
+
+    it("Deve retornar erro 401 ao realizar transferência sem autenticação", () => {
         cy.fazerTransferenciaSemToken().then((response) => {
             validarErro(response, 401, transferenciaErrorSchema, "Token de autenticação não fornecido.");
-            cy.log("✅ Validacao do erro 401 com sucesso");
+            cy.log("Validação do erro 401 realizada com sucesso");
         });
     });
-    it("Deve retornar erro 405 com metodo nao permitodo", () => {
+
+    it("Deve retornar erro 405 ao utilizar método HTTP não permitido", () => {
         cy.fazerTransferenciaComMethodErrado(1, 2, 10).then((response) => {
             validarErro(response, 405, transferenciaErrorSchema, "Método não permitido.");
-            cy.log("✅ Validacao do erro 405 com sucesso");
+            cy.log("Validação do erro 405 realizada com sucesso");
         });
     });
-    it("Deve retornar erro 422 validação de dados (saldo insuficiente, contas inativas)", () => {
+
+    it("Deve retornar erro 422 ao violar regras de validação de negócio", () => {
         cy.fazerTransferenciaInvalida(6, 2, 10).then((response) => {
             const msg = response.body.error;
 
@@ -40,10 +44,10 @@ describe("TransferenciaPost - API Test", () => {
             ];
 
             expect(mensagensAceitas).to.include(msg);
-            cy.log(`⚠️ Cenário validado: ${msg}`);
+            cy.log(`Cenário de validação retornado: ${msg}`);
             expect(response.status).to.equal(422);
             validateSchema(transferenciaErrorSchema, response.body);
-            cy.log("✅ Validacao do erro 422 com sucesso");
+            cy.log("Validação do erro 422 realizada com sucesso");
         });
     });
 });
