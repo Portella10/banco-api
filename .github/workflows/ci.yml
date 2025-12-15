@@ -9,6 +9,9 @@ jobs:
     tests:
         runs-on: ubuntu-latest
 
+        env:
+            API_URL: https://sua-api-mock.onrender.com
+
         steps:
             - uses: actions/checkout@v4
 
