@@ -3,8 +3,5 @@
         "ajv": "^8.17.1",
         "cypress": "^14.5.1",
         "cypress-mochawesome-reporter": "^4.0.2"
-    },
-    "scripts": {
-        "cypress:run": "cypress run"
     }
 }
